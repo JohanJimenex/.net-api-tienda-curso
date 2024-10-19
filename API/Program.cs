@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
+// Este archivo se pueden inyectar clases globales como en angular con app.module.ts
 // inyección de dependencias para el contexto de la base de datos 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
