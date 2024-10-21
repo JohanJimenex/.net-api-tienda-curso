@@ -10,8 +10,9 @@ public class TiendaContext : DbContext { //Hereda de la clase DbContext para pod
 
     public DbSet<Producto> Productos { get; set; } //Propiedad que representa la tabla de productos en la base de datos
 
-    // protected override void OnModelCreating(ModelBuilder modelBuilder) { //Método que se ejecuta al crear el modelo de la base de datos
-    //     modelBuilder.Entity<Producto>().ToTable("Productos"); //Se indica que la tabla de productos se llamará "Productos"
+    //con este metodo podemos sobreeescribir el nombre por si no queremos que se llame igual que la clase
+    // protected override void OnModelCreating(ModelBuilder modelBuilder) { 
+    //     modelBuilder.Entity<Producto>().ToTable("MisProductos"); //ahora en vez de llamarse "Productos" se llamará "MisProductos" 
     // }
 
 }

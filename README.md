@@ -80,5 +80,39 @@ El proyecto "API" tendrá acceso al proyecto "Infraestructura"
 Dentro de la capa "Infraestructura"  se instalaron dos paquetes:
 ```shell
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    # Este paquete es el proveedor de mhySQL para entity framework
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+```
+
+
+Con el comando :
+```shell
+dotnet ef migrations add InitialCreate -p ./Infrastructure -s ./API -o Data/Migrations
+ ```
+Preparamos los archivos para la migracionde los modelos hacia la DB,
+
+-p o --project, se indica la carpeta que contiene el DBContext
+con -s o --startup se especifica el projecto de inicio , o sea, el que inicia la aplicaicon que es API que contiene el Program.cs
+
+luego ejecutamos este comando para actualizar la base de datos
+nota: la base de datos debe estar corriendo ya que se conectara a traves del connection string colcoado en el archivo appsetting.json y configurado en el Program.cs
+
+```shell
+dotnet ef database update -p ./Infrastructure -s ./API
+```
+
+Este es el codigo de configuracion:
+
+```csharp
+//  Program.cs
+builder.Services.AddDbContext<TiendaContext>(options => {
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
+```
+
+Otra opcion para que s ehaga automatica es colcoar este codigo en el program.cs
+
+```csharp
+
 ```
