@@ -1,4 +1,6 @@
-# Estructura de la Solución en .NET
+Prohyecto donde se implementa **CODE FIRST** con EntityFramework
+
+# Estructura de la Solución en .NET 
 
 Esta solución está estructurada en tres capas principales: **API**, **Core**, e **Infraestructura**. Cada capa tiene una responsabilidad específica, lo que sigue los principios de la arquitectura limpia o en capas. Esto permite una separación clara de responsabilidades y facilita la mantenibilidad y escalabilidad del proyecto.
 
@@ -49,7 +51,6 @@ Responsabilidades de la capa Infraestructura:
 - **Testabilidad**: Las capas son más fáciles de probar de manera aislada.
 - **Escalabilidad**: La arquitectura permite que cada capa crezca y se modifique independientemente de las otras.
 
-
 Mis notas:
 
 Notas del patron de arquitectura de carpetas:
@@ -77,18 +78,20 @@ El proyecto "API" tendrá acceso al proyecto "Infraestructura"
 +-------------------+
 ```
 
-Dentro de la capa "Infraestructura"  se instalaron dos paquetes:
+Dentro de la capa "Infraestructura" se instalaron dos paquetes:
+
 ```shell
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     # Este paquete es el proveedor de mhySQL para entity framework
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
 ```
 
-
 Con el comando :
+
 ```shell
 dotnet ef migrations add InitialCreate -p ./Infrastructure -s ./API -o Data/Migrations
- ```
+```
+
 Preparamos los archivos para la migracionde los modelos hacia la DB,
 
 -p o --project, se indica la carpeta que contiene el DBContext
@@ -101,6 +104,25 @@ nota: la base de datos debe estar corriendo ya que se conectara a traves del con
 dotnet ef database update -p ./Infrastructure -s ./API
 ```
 
+Otra opcion para que se haga automatica es colcoar este codigo en el program.cs
+
+```csharp
+using (var scope = app.Services.CreateScope()) {
+
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+
+    try {
+        var context = services.GetRequiredService<TiendaContext>();
+        await context.Database.MigrateAsync();
+    }
+    catch (Exception ex) {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "An error occurred creating the DB.");
+    }
+}
+```
+
 Este es el codigo de configuracion:
 
 ```csharp
@@ -111,8 +133,9 @@ builder.Services.AddDbContext<TiendaContext>(options => {
 });
 ```
 
-Otra opcion para que s ehaga automatica es colcoar este codigo en el program.cs
+## Libreria/Dependencias/Paquetes/Nugets:
 
-```csharp
-
-```
+1. EntityFrameWorkCore /.tools /.Designer / .mySql: ORM para interactuar con la DB 
+1. CsvHelper : para leer archivos .CVS con datos y mandarlo a la base de datos
+1. 
+1. 

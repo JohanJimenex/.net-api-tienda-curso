@@ -1,7 +1,7 @@
 namespace Core.Entities;
 
 public class Categoria {
-    int Id { get; set; }
-    string Nombre { get; set; }
-    ICollection<Producto> Productos = new List<Producto>();
+    public int Id { get; set; }
+    public string? Nombre { get; set; }
+    public ICollection<Producto> Productos = new List<Producto>();
 }

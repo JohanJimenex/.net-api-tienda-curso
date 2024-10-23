@@ -28,6 +28,7 @@ using (var scope = app.Services.CreateScope()) {
     try {
         var context = services.GetRequiredService<TiendaContext>();
         await context.Database.MigrateAsync();
+        await TiendaContextSeed.SeedAsync(context, loggerFactory);
     }
     catch (Exception ex) {
         var logger = loggerFactory.CreateLogger<Program>();
