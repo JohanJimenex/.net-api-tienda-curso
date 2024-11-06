@@ -1,0 +1,6 @@
+# Archivo .editorconfig
+root = true
+
+[*.cs]
+# Reglas específicas de C#
+csharp_new_line_before_open_brace = none

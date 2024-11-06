@@ -6,8 +6,8 @@ namespace Infrastructure.data;
 
 public class TiendaContext : DbContext { //Hereda de la clase DbContext para poder usar las funcionalidades de Entity Framework
 
-    public TiendaContext(DbContextOptions<TiendaContext> options) : base(options) { //Constructor que recibe las opciones de configuración de la base de datos
-    }
+    //Constructor que recibe las opciones de configuración de la base de datos
+    public TiendaContext(DbContextOptions<TiendaContext> options) : base(options) { }
 
     public DbSet<Producto> Productos { get; set; } //Propiedad que representa la tabla de productos en la base de datos
     public DbSet<Marca> Marcas { get; set; }

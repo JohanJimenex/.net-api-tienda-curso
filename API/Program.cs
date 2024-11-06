@@ -1,12 +1,22 @@
+using API.Extensions;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Este servicio es para poder usar controladores
-builder.Services.AddControllers();
+builder.Services.ConfigurarLosCORS(); // Este emtodo es mi extension para configurar los CORS
 
-// Este archivo se pueden inyectar clases globales como en angular con app.module.ts
+//Esto se hizo en una extencion del servico arriba
+// builder.Services.AddCors(opt => {
+//     opt.AddPolicy("CorsPolicy", policy => {
+//         policy.AllowAnyHeader().
+//         AllowAnyMethod().
+//         WithOrigins("https://localhost:4200");
+//     });
+// });
+
+builder.Services.AddControllers();// Este servicio es para poder usar controladores
+
 // inyección de dependencias para el contexto de la base de datos 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,12 +45,14 @@ using (var scope = app.Services.CreateScope()) {
         logger.LogError(ex, "An error occurred creating the DB.");
     }
 }
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection(); 
+
+app.UseCors("CorsPolicy"); // Este metodo es para poder usar los CORS
+app.UseHttpsRedirection();// 
 app.MapControllers(); // Este metodo es para poder usar controladores en la API
 app.Run();
 

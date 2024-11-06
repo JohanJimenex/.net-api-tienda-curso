@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Core.Entities;
 
-public class Marca {
-    public int Id { get; set; }
+public class Marca : BaseEntity {
+
     public string? Nombre { get; set; }
     public ICollection<Producto> Productos = new List<Producto>();
 }

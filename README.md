@@ -1,4 +1,5 @@
-Prohyecto donde se implementa **CODE FIRST** con EntityFramework
+Proyecto donde se implementa **CODE FIRST** y tambien **DATABASE FIRST** con EntityFramework
+Tambien configurar las reglas de las tablas con FluentAPI
 
 # Estructura de la Solución en .NET 
 
@@ -81,15 +82,21 @@ El proyecto "API" tendrá acceso al proyecto "Infraestructura"
 Dentro de la capa "Infraestructura" se instalaron dos paquetes:
 
 ```shell
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-    # Este paquete es el proveedor de mhySQL para entity framework
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" /> #Agregar en el proyecto a usar
+    # Este paquete es para hacer la migracion desde la base de datos a modelos/clases (Database FIRST)
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10" />
+    # Este paquete es el proveedor de mhySQL para entity framework para usar el dbcontext 
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
 ```
+
+**CODE FIRST**
+1ro creamos los modelos
+2do creamod una clase DbContext con la configuracion de las clases a migrar (ver TiendaContext.cs)
 
 Con el comando :
 
 ```shell
-dotnet ef migrations add InitialCreate -p ./Infrastructure -s ./API -o Data/Migrations
+    dotnet ef migrations add InitialCreate -p ./Infrastructure -s ./API -o Data/Migrations
 ```
 
 Preparamos los archivos para la migracionde los modelos hacia la DB,
@@ -101,26 +108,26 @@ luego ejecutamos este comando para actualizar la base de datos
 nota: la base de datos debe estar corriendo ya que se conectara a traves del connection string colcoado en el archivo appsetting.json y configurado en el Program.cs
 
 ```shell
-dotnet ef database update -p ./Infrastructure -s ./API
+    dotnet ef database update -p ./Infrastructure -s ./API
 ```
 
-Otra opcion para que se haga automatica es colcoar este codigo en el program.cs
+Otra opcion para que se haga la el update automatico es colocar este codigo en el program.cs
 
 ```csharp
-using (var scope = app.Services.CreateScope()) {
+    using (var scope = app.Services.CreateScope()) {
 
-    var services = scope.ServiceProvider;
-    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var services = scope.ServiceProvider;
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
-    try {
-        var context = services.GetRequiredService<TiendaContext>();
-        await context.Database.MigrateAsync();
+        try {
+            var context = services.GetRequiredService<TiendaContext>();
+            await context.Database.MigrateAsync();
+        }
+        catch (Exception ex) {
+            var logger = loggerFactory.CreateLogger<Program>();
+            logger.LogError(ex, "An error occurred creating the DB.");
+        }
     }
-    catch (Exception ex) {
-        var logger = loggerFactory.CreateLogger<Program>();
-        logger.LogError(ex, "An error occurred creating the DB.");
-    }
-}
 ```
 
 Este es el codigo de configuracion:
@@ -133,9 +140,22 @@ builder.Services.AddDbContext<TiendaContext>(options => {
 });
 ```
 
+**DATABASE FIRST**
+
+1ro. Creamos la base de datos y las tablas en la DB
+2do. Ejecutamos el comando:
+```shell
+    # Este es para MySQL   
+    dotnet ef dbcontext scafold "Server=localhost;User=root;Password=123456;Database=nombreDB" Pomelo.EntityFrameworkCore.Mysql -s NombreCarpetaDelProyectoEjemploAPI -p NombreCarpetadondeSeCreaContextDBEjemploInfrastructure --context NombreDelArchivoContext --context-dir NombreCarpetaEjmData --output-dir Entities
+    
+   
+```
+
+
+
 ## Libreria/Dependencias/Paquetes/Nugets:
 
-1. EntityFrameWorkCore /.tools /.Designer / .mySql: ORM para interactuar con la DB 
+1. EntityFrameWorkCore /.tools /.Design / .mySql: ORM para interactuar con la DB 
 1. CsvHelper : para leer archivos .CVS con datos y mandarlo a la base de datos
 1. 
 1. 
