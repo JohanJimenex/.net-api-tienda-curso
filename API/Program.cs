@@ -1,35 +1,34 @@
+using System.Reflection;
 using API.Extensions;
+using AspNetCoreRateLimit;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigurarLosCORS(); // Este emtodo es mi extension para configurar los CORS
+builder.Services.ConfigurarLosCORS(); // Mi extension para configurar los CORS
+builder.Services.InjeccionDeDependencias(); // Mi extension para agregar los servicios
+builder.Services.ConfigurarLimitesDePeticiones();//Confifurar con libreria AspNetCoreRateLimit
+builder.Services.AddControllers(); // Este servicio es para poder usar controladores tradicionales
 
-//Esto se hizo en una extencion del servico arriba
-// builder.Services.AddCors(opt => {
-//     opt.AddPolicy("CorsPolicy", policy => {
-//         policy.AllowAnyHeader().
-//         AllowAnyMethod().
-//         WithOrigins("https://localhost:4200");
-//     });
-// });
+//con este codigo se habilita el formato XML en la API y que acepte el header Accept: application/xml
+// builder.Services.AddControllers(options => {
+//     options.RespectBrowserAcceptHeader = true;
+//     options.ReturnHttpNotAcceptable = true;
+// }).AddXmlSerializerFormatters();
 
-builder.Services.AddControllers();// Este servicio es para poder usar controladores
+builder.Services.AddSwaggerGen(); // Este metodo es para poder usar la documentacion de swagger
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly()); // este metodo busca en la clase donde se esta ejecutando para encontrar los perfiles de automapper. Curso Udemy
+builder.Services.ConfigurarVersionamientoDeAPI(); // Este metodo es mi extension para configurar las versiones de la API
+builder.Services.AddEndpointsApiExplorer();  //Este metodo es para poder usar la documentacion de swagger
 
-// inyección de dependencias para el contexto de la base de datos 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
-// Codigo para hacer migracion automatica de los modelos a la base de datos con EF Core cada vez que se corra el programa
-// Create a new scope
 using (var scope = app.Services.CreateScope()) {
 
     var services = scope.ServiceProvider;
@@ -51,9 +50,8 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
+app.UseIpRateLimiting(); // Este metodo es para poder usar el RateLimiter de la libreria de AspNetCoreRateLimit
 app.UseCors("CorsPolicy"); // Este metodo es para poder usar los CORS
 app.UseHttpsRedirection();// 
 app.MapControllers(); // Este metodo es para poder usar controladores en la API
 app.Run();
-
-

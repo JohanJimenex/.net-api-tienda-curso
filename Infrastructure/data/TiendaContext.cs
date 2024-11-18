@@ -23,31 +23,31 @@ public class TiendaContext : DbContext { //Hereda de la clase DbContext para pod
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        //Esta linea de código busca todas las configuraciones que implementen la interfaz IEntityTypeConfiguration
+        //Esta linea de código busca todas las configuraciones que implementen la interfaz IEntityTypeConfiguration ejemplo ProductoConfiguration
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         // Esta configuration se hizo en un archivo separado llamado "ProductoConfiguration.cs"
         //   // En este caso se establece varias reglas para la tabla "Productos"
-        //         modelBuilder.Entity<Producto>(entity =>
+        //         modelBuilder.Entity<Producto>(p =>
         //         {
-        //             entity.HasKey(e => e.Id);
+        //             p.HasKey(e => e.Id);
 
-        //             entity.Property(e => e.Nombre)
+        //             p.Property(e => e.Nombre)
         //                   .IsRequired()
         //                   .HasMaxLength(100);
 
-        //             entity.Property(e => e.Precio)
+        //             p.Property(e => e.Precio)
         //                   .HasColumnType("decimal(18,2)")
         //                   .HasDefaultValue(0.0m);
 
-        //             entity.Property(e => e.FechaCreacion)
+        //             p.Property(e => e.FechaCreacion)
         //                   .HasColumnType("date");
 
-        //             entity.HasOne(e => e.Marca)
+        //             p.HasOne(e => e.Marca)
         //                   .WithMany(m => m.Productos)
         //                   .HasForeignKey(e => e.MarcaId);
 
-        //             entity.HasOne(e => e.Categoria)
+        //             p.HasOne(e => e.Categoria)
         //                   .WithMany(c => c.Productos)
         //                   .HasForeignKey(e => e.CategoriaId);
         //         });
@@ -56,7 +56,7 @@ public class TiendaContext : DbContext { //Hereda de la clase DbContext para pod
         // ========================================================================================================
 
         //La otra forma de hacerlo es con Data Annotations
-        // Ejemplo desde la misma clase Producto
+        // Ejemplo desde la misma clase Producto, (abrir la clase Producto.cs para verlo completo)
 
         // public class Producto
         // {
