@@ -16,7 +16,7 @@ public class Paginator<T> {
 
     public List<T> Items { get; set; } // Lista de elementos que se van a mostrar en la pagina, ejemplo: List<Producto> 
 
-    public Paginator(int count, int pageIndex, int pageSize, List<T> items) {
+    public Paginator(int pageIndex, int pageSize, int count, List<T> items) {
         PageIndex = pageIndex;
         PageSize = pageSize;
         TotalCount = count;

@@ -26,7 +26,8 @@ public class BaseRepository<T> : IRepository<T> where T : class {
 
     //Otra forma de ahcer esto, es que devuelva un objeto con la cantidad de elementos y los elementos
     //ejemplo:  {totalItems: 100, items: [elemento1, elemento2, elemento3, ...]}
-    public virtual async Task<(int totalItems, IEnumerable<T> items)> GetAllAsync(int pageIndex, int pageSize) {
+    public virtual async Task<(int totalItems, IEnumerable<T> items)> GetAllAsync(int pageIndex, int pageSize, string search) {
+
         var totalItems = await _context.Set<T>().CountAsync();
         var items = await _context.Set<T>()
                             .Skip(pageIndex * pageSize) //esto devuelve los elementos que se van a saltar, ejemplo si pageIndex es 1 y pageSize es 10, se saltara 10 elementos

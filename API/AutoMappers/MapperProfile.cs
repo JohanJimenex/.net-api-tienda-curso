@@ -27,7 +27,5 @@ public class MapperProfile : Profile {
             .ForMember(dest => dest.Categoria, opt => opt.Ignore())
             .ForMember(dest => dest.Marca, opt => opt.Ignore());
             //cuando se aun mapeo desde ProductoListDTO a Producto, se ignora la categoria y la marca
-
-
     }
 }

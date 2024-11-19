@@ -27,11 +27,12 @@ public class ProductoRepositoryImpl : BaseRepository<Producto>, IProductoReposit
         }
     }
 
-    public override async Task<(int totalItems, IEnumerable<Producto> items)> GetAllAsync(int pageIndex, int pageSize) {
+    public override async Task<(int totalItems, IEnumerable<Producto> items)> GetAllAsync(int pageIndex, int pageSize , string search ) {
 
         var totalItems = await _context.Productos.CountAsync();
         
         var productos = await _context.Productos
+                            .Where(p => p.Nombre!.ToLower().Contains(search.ToLower()))  
                             .Include(p => p.Categoria)
                             .Include(p => p.Marca)
                             .Skip(pageIndex * pageSize)

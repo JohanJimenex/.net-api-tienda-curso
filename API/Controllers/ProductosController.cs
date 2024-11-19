@@ -49,7 +49,7 @@ public class ProductosController : ControllerBase {
     [HttpGet]
     public async Task<ActionResult<Paginator<ProductoListDTO>>> Get([FromQuery] QueryParams queryParams) {
 
-        var result = await _unitOfWork.Productosrepository.GetAllAsync(queryParams.PageIndex, queryParams.PageSize);
+        var result = await _unitOfWork.Productosrepository.GetAllAsync(queryParams.PageIndex, queryParams.PageSize, queryParams.Search ?? "");
         var resultDTO = _mapper.Map<List<ProductoListDTO>>(result.items);
 
         var pager = new Paginator<ProductoListDTO>(result.totalItems, queryParams.PageIndex, queryParams.PageSize, resultDTO);
@@ -61,7 +61,7 @@ public class ProductosController : ControllerBase {
         Response.Headers.Append("x-totalPages", pager.TotalPages.ToString());
         Response.Headers.Append("x-hasNext", pager.HasNextPage.ToString());
         Response.Headers.Append("x-hasPrevious", pager.HasPreviousPage.ToString());
-        
+
         return Ok(pager);
 
     }

@@ -6,7 +6,7 @@ public interface IRepository<T> where T : class {
 
     Task<T> GetByIdAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
-    Task<(int totalItems, IEnumerable<T> items)> GetAllAsync(int pageIndex, int pageSize);
+    Task<(int totalItems, IEnumerable<T> items)> GetAllAsync(int pageIndex, int pageSize, string search);
 
     Task<MiClase<T>> GetAllAsync2(int pageIndex, int pageSize);
 
