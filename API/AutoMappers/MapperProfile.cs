@@ -11,11 +11,13 @@ namespace API.AutoMappers;
 public class MapperProfile : Profile {
 
     public MapperProfile() {
-        CreateMap<ProductoDTO, Producto>().ReverseMap().ForAllMembers(options => options.Condition((origen, destino, propiedad) => propiedad != null)); ;
+
+        CreateMap<ProductoDTO, Producto>().ReverseMap().ForAllMembers(options => options.Condition((origen, destino, propiedad) => propiedad != null));
         CreateMap<CategoriaDTO, Categoria>().ReverseMap();
         CreateMap<MarcaDTO, Marca>().ReverseMap();
 
-        //Con este mapeo sirve para mapear manualmente los campos que no se llaman igual o ignorar
+        //OJO esto no es necesario si las propeidades se llaman iguales y/o contiene las mismas propiedades
+        //Esto es para hacer el mapeo manualmente los campos que no se llaman igual o campos a ignorar si un campo no existe ne uno de los modelos
         CreateMap<Producto, ProductoListDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Nombre))
@@ -26,6 +28,6 @@ public class MapperProfile : Profile {
             .ReverseMap()
             .ForMember(dest => dest.Categoria, opt => opt.Ignore())
             .ForMember(dest => dest.Marca, opt => opt.Ignore());
-            //cuando se aun mapeo desde ProductoListDTO a Producto, se ignora la categoria y la marca
+        //cuando se aun mapeo desde ProductoListDTO a Producto, se ignora la categoria y la marca
     }
 }
