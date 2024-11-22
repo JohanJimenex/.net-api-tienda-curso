@@ -33,10 +33,10 @@ using (var scope = app.Services.CreateScope()) {
 
     var services = scope.ServiceProvider;
     var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-
     try {
         var context = services.GetRequiredService<TiendaContext>();
-        await context.Database.MigrateAsync();
+        await context.Database.MigrateAsync();  
+        //Este metodo es para agregar datos a la base de datos 
         await TiendaContextSeed.SeedAsync(context, loggerFactory);
     }
     catch (Exception ex) {

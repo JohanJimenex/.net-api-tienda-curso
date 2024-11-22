@@ -1,1 +1,0 @@
-Podemos hacer esta configuracion tambien directamente en el arhico de TiendaDBContext.cs 

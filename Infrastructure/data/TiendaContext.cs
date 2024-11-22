@@ -13,6 +13,9 @@ public class TiendaContext : DbContext { //Hereda de la clase DbContext para pod
     public DbSet<Marca> Marcas { get; set; }
     public DbSet<Categoria> Categorias { get; set; }
 
+    public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Rol> Roles { get; set; }
+
     //con este metodo podemos sobreeescribir el nombre por si no queremos que se llame igual que la clase
     // protected override void OnModelCreating(ModelBuilder modelBuilder) { 
     //     modelBuilder.Entity<Producto>().ToTable("MisProductos"); //ahora en vez de llamarse "Productos" se llamará "MisProductos" 

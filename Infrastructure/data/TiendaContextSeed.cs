@@ -7,9 +7,8 @@ namespace Infrastructure.data;
 
 // Clase que se encarga de poblar la base de datos con datos de prueba
 public class TiendaContextSeed {
-
+    //Metodo para poblar la base de datos
     public static async Task SeedAsync(TiendaContext tiendaContext, ILoggerFactory loggerFactory) {
-
         try {
             //Esto es para obtener la ruta del proyecto
             var ruta = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -55,12 +54,19 @@ public class TiendaContextSeed {
                 await tiendaContext.SaveChangesAsync();
             }
 
+            //Agregar roles
+            if (!tiendaContext.Roles.Any()) {
+                tiendaContext.Roles.AddRange(new Rol { Nombre = "Admin" }, new Rol { Nombre = "Gerente" }, new Rol { Nombre = "Empleado" });
+                await tiendaContext.SaveChangesAsync();
+            }
+
         }
         catch (Exception ex) {
             var logger = loggerFactory.CreateLogger<TiendaContextSeed>();
             logger.LogError(ex.Message);
         }
-
     }
+
+
 
 }
