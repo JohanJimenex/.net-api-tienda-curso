@@ -6,7 +6,7 @@ namespace Infrastructure.Repositories;
 
 
 
-public class CategoriaRepositoryImpl : BaseRepository<Categoria>, ICategoriaRepository {
+public class CategoriaRepositoryImpl : BaseRepositoryImpl<Categoria>, ICategoriaRepository {
 
     public CategoriaRepositoryImpl(TiendaContext context) : base(context) { }
 }

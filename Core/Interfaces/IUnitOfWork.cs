@@ -9,6 +9,8 @@ public interface IUnitOfWork {
     IProductoRepository Productosrepository { get; }
     ICategoriaRepository CategoriasRepository { get; }
     IMarcaRepository MarcasRepository { get; }
+    IUsuarioRepository UsuariosRepository { get; }
+    IRolRepository RolesRepository { get; }
 
     Task<int> Save();
 

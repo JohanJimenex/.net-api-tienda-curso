@@ -6,7 +6,7 @@ namespace Infrastructure.Repositories;
 
 
 
-public class MarcaRepositoryImpl : BaseRepository<Marca>, IMarcaRepository {
+public class MarcaRepositoryImpl : BaseRepositoryImpl<Marca>, IMarcaRepository {
 
     public MarcaRepositoryImpl(TiendaContext context) : base(context) { }
 }

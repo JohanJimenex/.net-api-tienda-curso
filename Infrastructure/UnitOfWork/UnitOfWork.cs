@@ -20,6 +20,8 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
     private IProductoRepository _productos;
     private ICategoriaRepository _categorias;
     private IMarcaRepository _marcas;
+    private IUsuarioRepository _usuarios;
+    private IRolRepository _roles;
 
     public IProductoRepository Productosrepository {
         get {
@@ -48,6 +50,25 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
         }
     }
 
+    public IUsuarioRepository UsuariosRepository {
+        get {
+            if (_usuarios == null) {
+                _usuarios = new UsuarioRepositoryImpl(_context);
+            }
+            return _usuarios;
+        }
+    }
+
+    public IRolRepository RolesRepository {
+        get {
+            if (_roles == null) {
+                _roles = new RolRepositoryImpl(_context);
+            }
+            return _roles;
+        }
+    }
+
+
     public UnitOfWork(TiendaContext context) {
         _context = context;
     }
@@ -63,20 +84,34 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
 
 
 //Otra forma de impleemntar UnitOfWork usando injeccion de dependencias en el constructor
-//aunque en este caso las instancias se cargan de manera perezosa
+//aunque en este caso las instancias NO se cargan de manera perezosa mientras que en el caso anterior si
 public class UnitOfWork2 : IUnitOfWork {
 
     public IProductoRepository Productosrepository { get; }
     public ICategoriaRepository CategoriasRepository { get; }
     public IMarcaRepository MarcasRepository { get; }
 
+    public IUsuarioRepository UsuariosRepository { get; }
+    public IRolRepository RolesRepository { get; }
+
     private readonly TiendaContext _context;
 
-    public UnitOfWork2(IProductoRepository productos, ICategoriaRepository categorias, IMarcaRepository marcas, TiendaContext context) {
+    public UnitOfWork2(
+        IProductoRepository productos,
+        ICategoriaRepository categorias,
+        IMarcaRepository marcas,
+        IUsuarioRepository usuarioRepository,
+        IRolRepository rolRepository,
+        TiendaContext context) {
+
         Productosrepository = productos;
         CategoriasRepository = categorias;
         MarcasRepository = marcas;
+        UsuariosRepository = usuarioRepository;
+        RolesRepository = rolRepository;
+
         _context = context;
+
     }
 
     //Guarda los cambios en la base de datos

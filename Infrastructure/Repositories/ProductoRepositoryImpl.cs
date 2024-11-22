@@ -7,7 +7,7 @@ namespace Infrastructure.Repositories;
 
 
 
-public class ProductoRepositoryImpl : BaseRepository<Producto>, IProductoRepository {
+public class ProductoRepositoryImpl : BaseRepositoryImpl<Producto>, IProductoRepository {
 
     private readonly TiendaContext _context;
 
