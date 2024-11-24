@@ -13,7 +13,7 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario> {
         builder.Property(u => u.ApellidoPaterno).IsRequired().HasMaxLength(50);
         builder.Property(u => u.ApellidoMaterno).IsRequired().HasMaxLength(50);
         builder.Property(u => u.Correo).IsRequired().HasMaxLength(50);
-        builder.Property(u => u.Contrasena).IsRequired().HasMaxLength(50);
+        builder.Property(u => u.Contrasena).IsRequired().HasMaxLength(250);
         // Se configura la relación muchos a muchos con la tabla UsuariosRoles
 
         // Se configura la relación muchos a muchos con la tabla UsuariosRoles, en vez de crear una entidad UsuariosRoles se usa el método UsingEntity

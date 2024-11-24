@@ -17,11 +17,11 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
 
     private readonly TiendaContext _context;
 
-    private IProductoRepository _productos;
-    private ICategoriaRepository _categorias;
-    private IMarcaRepository _marcas;
-    private IUsuarioRepository _usuarios;
-    private IRolRepository _roles;
+    private IProductoRepository? _productos;
+    private ICategoriaRepository? _categorias;
+    private IMarcaRepository? _marcas;
+    private IUsuarioRepository? _usuarios;
+    private IRolRepository? _roles;
 
     public IProductoRepository Productosrepository {
         get {

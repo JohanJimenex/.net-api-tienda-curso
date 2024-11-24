@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories;
 
 
-public class BaseRepositoryImpl<T> : IRepository<T> where T : class {
+abstract public class BaseRepositoryImpl<T> : IRepository<T> where T : class {
 
     //Ojo en esta impleemntacion no se usara el metodo de guardar cambios,
     //sino que se usara el metodo de guardar cambios con el patron de diseno UnitOfWork, se peude hacer desde aqui si es una app pequena
@@ -17,7 +17,8 @@ public class BaseRepositoryImpl<T> : IRepository<T> where T : class {
     }
 
     public virtual async Task<T> GetByIdAsync(int id) {
-        return await _context.Set<T>().FindAsync(id);
+        var entity = await _context.Set<T>().FindAsync(id) ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
+        return entity;
     }
 
     public virtual async Task<IEnumerable<T>> GetAllAsync() {
@@ -37,7 +38,7 @@ public class BaseRepositoryImpl<T> : IRepository<T> where T : class {
         return (totalItems, items);
     }
 
-    // Ejemplo con una clase que tiene dos propiedades, una para la cantidad de elementos y otra para los elementos
+    // Ejemplo con una clase que tiene dos propiedades, una para la cantidad de elementos y otra para los elementos en vez de una tupla
     public async Task<MiClase<T>> GetAllAsync2(int pageIndex, int pageSize) {
         var totalItems = await _context.Set<T>().CountAsync();
         var items = await _context.Set<T>()

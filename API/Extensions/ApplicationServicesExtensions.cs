@@ -1,11 +1,18 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
+using API.Helpers;
+using API.Services;
 using AspNetCoreRateLimit;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Extensions;
 
@@ -32,6 +39,8 @@ public static class ApplicationServicesExtensions {
         //En este caso hemos comentado este codigo porque ya no lo necesitamos,
         // ya que hemos implementado el patron de diseño UnitOfWork quien se encarga de instanciar los repositorios
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>(); //Este servicio nos facilita la encriptacion de contraseñas
+        services.AddScoped<IUserService, UserService>();
     }
 
     public static void ConfigurarLimitesDePeticiones(this IServiceCollection services) {
@@ -80,7 +89,7 @@ public static class ApplicationServicesExtensions {
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
             // options.ApiVersionReader = new QueryStringApiVersionReader("v"); //leer la version query string, eje: /api/productos?v=1
             // options.ApiVersionReader = new HeaderApiVersionReader("api-version");//para leer la version de la API desde el header se usa esta linea eje: api-version: 1
-            
+
             // Combinado: el cliente puede especificar la version de la API en la url, en el query string o en el header
             // options.ApiVersionReader = ApiVersionReader.Combine(
             //     new QueryStringApiVersionReader("v"),
@@ -96,5 +105,29 @@ public static class ApplicationServicesExtensions {
             options.GroupNameFormat = "'v'V";
             options.SubstituteApiVersionInUrl = true;
         });
+    }
+
+    public static void AddAuthenticationYConfigurarJWT(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env) {
+        // Este metodo busca en el archivo de configuracion la seccion JWT y la mapea a la clase JWT
+        services.Configure<JWT>(configuration.GetSection("JWT"));// 2da forma, usando el metodo Configure, (propuesto por el el curso UDemy)
+        // services.AddOptions<JWT>().Bind(configuration.GetSection("JWT")); //1ra forma, usando el metodo Bind, (propeusto por Copilot)
+        // El metodo .AddJwtBearer() es para poder configurar la autenticacion por JWT y usar el middleware de autenticacion,
+        // hay que instalar el paquete Microsoft.AspNetCore.Authentication.JwtBearer
+        services.AddAuthentication().AddJwtBearer(
+                  options => {
+                      options.RequireHttpsMetadata = !env.IsDevelopment() ; // este es para que no sea obligatorio usar https pero en produccion si deberia ser obligatorio
+                      options.SaveToken = false;
+                      options.TokenValidationParameters = new TokenValidationParameters {
+                          ValidateIssuerSigningKey = true,
+                          ValidateIssuer = true,
+                          ValidateAudience = true, //
+                          ValidateLifetime = true, //este es para que valide la fecha de expiracion del token
+                          ClockSkew = TimeSpan.Zero,//este es para que no haya diferencia de tiempo entre el servidor y el cliente
+                          ValidIssuer = configuration["JWT:Issuer"],
+                          ValidAudience = configuration["JWT:Audience"],
+                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Key"]!)), // Este es la clave secreta que se usa para firmar el token
+                      };
+                  }
+              );
     }
 }

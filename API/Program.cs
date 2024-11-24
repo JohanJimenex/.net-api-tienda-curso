@@ -1,8 +1,11 @@
 using System.Reflection;
+using System.Text;
 using API.Extensions;
+using API.Helpers;
 using AspNetCoreRateLimit;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,8 @@ builder.Services.AddSwaggerGen(); // Este metodo es para poder usar la documenta
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly()); // este metodo busca en la clase donde se esta ejecutando para encontrar los perfiles de automapper. Curso Udemy
 builder.Services.ConfigurarVersionamientoDeAPI(); // Este metodo es mi extension para configurar las versiones de la API
 builder.Services.AddEndpointsApiExplorer();  //Este metodo es para poder usar la documentacion de swagger
+builder.Services.AddAuthenticationYConfigurarJWT(builder.Configuration, builder.Environment); //Este metodo agrega el Services.AddAuthentication() y configura el JWT
+
 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,7 +40,7 @@ using (var scope = app.Services.CreateScope()) {
     var loggerFactory = services.GetRequiredService<ILoggerFactory>();
     try {
         var context = services.GetRequiredService<TiendaContext>();
-        await context.Database.MigrateAsync();  
+        await context.Database.MigrateAsync();
         //Este metodo es para agregar datos a la base de datos 
         await TiendaContextSeed.SeedAsync(context, loggerFactory);
     }
@@ -52,6 +57,8 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseIpRateLimiting(); // Este metodo es para poder usar el RateLimiter de la libreria de AspNetCoreRateLimit
 app.UseCors("CorsPolicy"); // Este metodo es para poder usar los CORS
-app.UseHttpsRedirection();// 
-app.MapControllers(); // Este metodo es para poder usar controladores en la API
+app.UseAuthentication(); // Este metodo es para poder usar la autenticacion por ejemplo JWT, Bearer, 0Auth, AzureAD,
+app.UseAuthorization(); // Este metodo es para poder usar la autorizacion por ejemplo Roles, Claims, Politicas, que se leen desde el token JWT o de la base de datos
+app.UseHttpsRedirection();// esto es para redirigir a https ejemplo: http://localhost:5000 a https://localhost:5001
+app.MapControllers(); // Este metodo es para que reemplaze la palabra controller por el nombre del controlador ejemplo: UsuariosController -> Usuarios
 app.Run();
