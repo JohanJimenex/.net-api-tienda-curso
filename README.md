@@ -1,3 +1,40 @@
+# 📚 Resumen de lo aprendido y puntos importantes
+
+1. 🗂️ **Patrón Repositorio e implementación de interfaces**
+2. 🕹️ **Controladores**
+   - 📄 Paginación
+   - 🔍 QueryParams
+3. 🏛️ **Arquitectura en capas (API, Core, Infrastructure)**
+   - 📦 DTO, Entity
+4. 🔧 **Inyección de dependencias (Extensión de servicio)**
+5. 🌐 **Configurar CORS**
+6. 🔄 **AutoMapper para mapear modelos**
+7. 🛠️ **Patrón Unit of Work**
+8. 🗃️ **Entity Framework Core (DbContext)**
+   - 🐳 Docker: configurar un contenedor de base de datos usando una imagen de MySQL
+   - 🏗️ Code First, migrar las entidades a la BD
+   - 📏 Configurar las reglas y tablas en común con Fluent API
+   - 🏷️ Annotations para agregar reglas a las propiedades de las entidades
+9. 🔐 **Usar Authentication con JWT y proteger los endpoints con [Authorize] y con roles especificados en el token con [Authorize(Roles = "Empleado")]**
+   - 🔑 Implementar JWT
+10. 🆕 **Versionar APIs**
+11. 🚦 **Limitar cantidad de peticiones al API**
+12. 📋 **Manejar Loggers con Serilog**
+13. ⚠️ **Gestión de errores y excepciones**
+   - Creando una clase "ApiResponse" para enviar un estandar de mensajes de errores (Statuscode, Message)
+   - Creando otra clase "ApiExcepcion" que hereda de "ApiRepsonse" pero con "Details"
+     - Creando un midleware personalizado para atrapar todas las excepciones
+     - 
+
+## 🎁 Extras de Felipe Gavilan
+
+1. 🗄️ **Output Cache**: Para guardar en cache las respuestas de las APIs por x tiempo para responder más rápido
+2. 🔒 **Autenticación "con 2 líneas"**: Usando los paquetes Identity.FrameworkCore y Token de las últimas versiones de .NET
+
+---
+
+## Estructura de la Solución en .NET
+
 Proyecto donde se implementa **CODE FIRST** y tambien **DATABASE FIRST** con EntityFramework
 Tambien configurar las reglas de las tablas con FluentAPI
 

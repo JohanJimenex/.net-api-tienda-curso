@@ -23,8 +23,8 @@ public class MapperProfile : Profile {
             .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Nombre))
             .ForMember(dest => dest.Precio, opt => opt.MapFrom(src => src.Precio))
             .ForMember(dest => dest.FechaCreacion, opt => opt.MapFrom(src => src.FechaCreacion))
-            // .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.Marca.Nombre)) //no estoy usando marca
-            // .ForMember(dest => dest.Categoria, opt => opt.MapFrom(src => src.Categoria.Nombre)) //no estoy usando categoria
+            // .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.Marca.Nombre)) //no estoy usando marca en mi dto
+            // .ForMember(dest => dest.Categoria, opt => opt.MapFrom(src => src.Categoria.Nombre)) //no estoy usando categoria en mi dto
             .ReverseMap()
             .ForMember(dest => dest.Categoria, opt => opt.Ignore())
             .ForMember(dest => dest.Marca, opt => opt.Ignore());
@@ -33,5 +33,8 @@ public class MapperProfile : Profile {
         CreateMap<RegisterDTO, Usuario>()
         .ForMember(dest => dest.Roles, opt => opt.Ignore())
         .ReverseMap();
+
+        CreateMap<Usuario, DatosUsuarioDTO>()
+        .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Nombre).ToList()));
     }
 }

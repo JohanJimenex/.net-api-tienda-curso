@@ -4,6 +4,7 @@ using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -14,6 +15,8 @@ namespace API.Controllers;
 [ApiVersion("3", Deprecated = true)]
 [Route("api/v{version:apiVersion}/[controller]")]
 // [Route("api/[controller]")]
+[Authorize(Roles = "Empleado")] //Recuerda que esto funciona porque en el Program.cs se habilito el servicio de app.UseAutorization() y en el JWT se habilito el uso de roles con el ClaimType: "roles"
+// [Authorize]
 public class ProductosController : ControllerBase {
 
     //se usa ahora UnitOfWork
@@ -52,7 +55,7 @@ public class ProductosController : ControllerBase {
         var result = await _unitOfWork.Productosrepository.GetAllAsync(queryParams.PageIndex, queryParams.PageSize, queryParams.Search ?? "");
         var resultDTO = _mapper.Map<List<ProductoListDTO>>(result.items);
 
-        var pager = new Paginator<ProductoListDTO>(result.totalItems, queryParams.PageIndex, queryParams.PageSize, resultDTO);
+        var pager = new Paginator<ProductoListDTO>(queryParams.PageIndex, queryParams.PageSize, result.totalItems, resultDTO);
 
         //ejemplo para responde en los headers
         Response.Headers.Append("x-totalItems", result.totalItems.ToString());
@@ -105,7 +108,7 @@ public class ProductosController : ControllerBase {
 
         // _productRepository.Add(producto); //se usa ahora UnitOfWork
         _unitOfWork.Productosrepository.Add(producto);
-        _unitOfWork.Save();
+        await _unitOfWork.Save();
         return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
 
 

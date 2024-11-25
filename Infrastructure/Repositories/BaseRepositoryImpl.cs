@@ -10,7 +10,7 @@ abstract public class BaseRepositoryImpl<T> : IRepository<T> where T : class {
     //Ojo en esta impleemntacion no se usara el metodo de guardar cambios,
     //sino que se usara el metodo de guardar cambios con el patron de diseno UnitOfWork, se peude hacer desde aqui si es una app pequena
 
-    private readonly TiendaContext _context;
+    public readonly TiendaContext _context;
 
     public BaseRepositoryImpl(TiendaContext context) {
         _context = context;

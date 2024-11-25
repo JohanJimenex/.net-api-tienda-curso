@@ -7,5 +7,5 @@ using Core.Entities;
 namespace Core.Interfaces;
 
 public interface IUsuarioRepository : IRepository<Usuario> {
-
+    public Task<Usuario> GetUsuarioByCorreo(string correo);
 }

@@ -25,7 +25,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly()); // este metodo 
 builder.Services.ConfigurarVersionamientoDeAPI(); // Este metodo es mi extension para configurar las versiones de la API
 builder.Services.AddEndpointsApiExplorer();  //Este metodo es para poder usar la documentacion de swagger
 builder.Services.AddAuthenticationYConfigurarJWT(builder.Configuration, builder.Environment); //Este metodo agrega el Services.AddAuthentication() y configura el JWT
-
+// builder.Services.AddAuthorization(); // Este metodo es para poder usar la autorizacion por ejemplo Roles, Claims, Politicas, que se leen desde el token JWT o de la base de datos
 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -58,7 +58,9 @@ if (app.Environment.IsDevelopment()) {
 app.UseIpRateLimiting(); // Este metodo es para poder usar el RateLimiter de la libreria de AspNetCoreRateLimit
 app.UseCors("CorsPolicy"); // Este metodo es para poder usar los CORS
 app.UseAuthentication(); // Este metodo es para poder usar la autenticacion por ejemplo JWT, Bearer, 0Auth, AzureAD,
-app.UseAuthorization(); // Este metodo es para poder usar la autorizacion por ejemplo Roles, Claims, Politicas, que se leen desde el token JWT o de la base de datos
+// Esto es para poder usar la Anotacion [Authorize] en los controladores, haciendo que busque el token y validandolo,
+// tambien [Authorize(Roles = "Administrador")] buscando los roles en el Claims del token, o Politicas, que se leen desde el token JWT o de la base de datos
+app.UseAuthorization();
 app.UseHttpsRedirection();// esto es para redirigir a https ejemplo: http://localhost:5000 a https://localhost:5001
 app.MapControllers(); // Este metodo es para que reemplaze la palabra controller por el nombre del controlador ejemplo: UsuariosController -> Usuarios
 app.Run();

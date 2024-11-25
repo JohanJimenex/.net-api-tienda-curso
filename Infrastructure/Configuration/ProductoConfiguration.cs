@@ -15,7 +15,6 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto> {
         // builder.Property(p => p.Id).IsRequired(); //especificamos que el Id es autoincremental
         builder.Property(p => p.Nombre).IsRequired().HasMaxLength(100);
         builder.Property(p => p.Precio).IsRequired().HasColumnType("decimal(18,2)"); //especificar el tipo de dato manualmente para SQL
-
         //Relaciones con otras tablas, no es necesario especificar la propiedad en las otras tablas
         builder.HasOne(p => p.Marca).WithMany(m => m.Productos).HasForeignKey(p => p.MarcaId);
         builder.HasOne(p => p.Categoria).WithMany(c => c.Productos).HasForeignKey(p => p.CategoriaId);

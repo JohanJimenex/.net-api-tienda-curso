@@ -20,4 +20,17 @@ public class UsuariosController : ControllerBase {
         var result = await _userService.RegisterAsync(registerDTO);
         return Ok(result);
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO) {
+
+        var result = await _userService.LoginAsync(loginDTO);
+
+        if (result == null) {
+            return Unauthorized("Usuario o contraseña incorrectos");
+        }
+
+        return Ok(result);
+    }
+
 }
