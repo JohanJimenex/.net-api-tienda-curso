@@ -28,10 +28,12 @@ public class ProductosController : ControllerBase {
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ILogger<ProductosController> _logger;
 
-    public ProductosController(IUnitOfWork unitOfWork, IMapper mapper) {
+    public ProductosController(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ProductosController> logger) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _logger = logger;
     }
 
 
@@ -94,6 +96,7 @@ public class ProductosController : ControllerBase {
 
         // _context.Productos.Add(producto);
         // _context.SaveChanges();
+         _logger.LogInformation("Creando un nuevo producto");
 
         var producto = _mapper.Map<Producto>(productoDto);
 

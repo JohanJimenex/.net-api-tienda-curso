@@ -6,11 +6,22 @@ using AspNetCoreRateLimit;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+// Configura Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()// este metodo es para que los logs se muestren en la consola ya que Serilog por defecto no muestra los logs en la consola
+    .WriteTo.File("../logs-klk/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+
 
 builder.Services.ConfigurarLosCORS(); // Mi extension para configurar los CORS
 builder.Services.InjeccionDeDependencias(); // Mi extension para agregar los servicios
+
 builder.Services.ConfigurarLimitesDePeticiones();//Confifurar con libreria AspNetCoreRateLimit
 builder.Services.AddControllers(); // Este servicio es para poder usar controladores tradicionales
 

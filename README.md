@@ -8,7 +8,7 @@
    - 📦 DTO, Entity
 4. 🔧 **Inyección de dependencias (Extensión de servicio)**
 5. 🌐 **Configurar CORS**
-6. 🔄 **AutoMapper para mapear modelos**
+6. 🔄 **AutoMapper para mapear modelos/entidades**
 7. 🛠️ **Patrón Unit of Work**
 8. 🗃️ **Entity Framework Core (DbContext)**
    - 🐳 Docker: configurar un contenedor de base de datos usando una imagen de MySQL
