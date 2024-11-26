@@ -14,10 +14,10 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.Console()// este metodo es para que los logs se muestren en la consola ya que Serilog por defecto no muestra los logs en la consola
-    .WriteTo.File("../logs-klk/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("../logs-klk/log-.txt", rollingInterval: RollingInterval.Day) //Esto tmabien se puede configurar en el appsettings.json
     .CreateLogger();
 
-
+builder.Logging.AddSerilog(dispose: true);
 
 builder.Services.ConfigurarLosCORS(); // Mi extension para configurar los CORS
 builder.Services.InjeccionDeDependencias(); // Mi extension para agregar los servicios

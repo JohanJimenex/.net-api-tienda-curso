@@ -80,7 +80,6 @@ public class UserService : IUserService {
         return datosUsuario;
     }
 
-
     public string GenerateToken(Usuario usuario) {
         var key = Encoding.UTF8.GetBytes(_jwt.Key);
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);

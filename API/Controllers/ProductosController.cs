@@ -1,6 +1,7 @@
 
 using API.DTOs;
 using API.Helpers;
+using API.Helpers.Errors;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -15,7 +16,7 @@ namespace API.Controllers;
 [ApiVersion("3", Deprecated = true)]
 [Route("api/v{version:apiVersion}/[controller]")]
 // [Route("api/[controller]")]
-[Authorize(Roles = "Empleado")] //Recuerda que esto funciona porque en el Program.cs se habilito el servicio de app.UseAutorization() y en el JWT se habilito el uso de roles con el ClaimType: "roles"
+// [Authorize(Roles = "Empleado")] //Recuerda que esto funciona porque en el Program.cs se habilito el servicio de app.UseAutorization() y en el JWT se habilito el uso de roles con el ClaimType: "roles"
 // [Authorize]
 public class ProductosController : ControllerBase {
 
@@ -42,12 +43,10 @@ public class ProductosController : ControllerBase {
     // [ProducesResponseType(StatusCodes.Status404NotFound)]
     // [EnableRateLimiting("fixed")] // esto es para habilitar el rate limiting cuando se usa la libreria nativa de aspnetcore
     // public async Task<ActionResult<List<ProductoListDTO>>> Get() {
-
     //     // return _context.Productos.ToList();
     //     // var result = await _productRepository.GetAllAsync();
     //     var result = await _unitOfWork.Productosrepository.GetAllAsync();
     //     var resultDTO = _mapper.Map<List<ProductoListDTO>>(result);
-
     //     return Ok(resultDTO);
     // }
 
@@ -85,7 +84,7 @@ public class ProductosController : ControllerBase {
         // var producto = _context.Productos.Find(id);
         var producto = await _unitOfWork.Productosrepository.GetByIdAsync(id);
         if (producto == null) {
-            return NotFound();
+            return NotFound(new ApiResponse(404));
         }
         return producto;
     }
@@ -96,7 +95,7 @@ public class ProductosController : ControllerBase {
 
         // _context.Productos.Add(producto);
         // _context.SaveChanges();
-         _logger.LogInformation("Creando un nuevo producto");
+         _logger.LogInformation("Creando un nuevo producto, usando serilog"); ///usando serilog
 
         var producto = _mapper.Map<Producto>(productoDto);
 
