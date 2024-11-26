@@ -88,12 +88,9 @@ public class UserService : IUserService {
             //Pueden haber mas cliams como el nombre, apellido, roles, etc
             new Claim(ClaimTypes.Name, usuario.Nombre), //etc
             new Claim(ClaimTypes.Email, usuario.Correo),
+            new Claim(ClaimTypes.Role, usuario.Roles.FirstOrDefault()?.Nombre ?? string.Empty)            
         };
-
-        foreach (var rol in usuario.Roles) {
-            claims.Append(new Claim(ClaimTypes.Role, rol.Nombre));
-        }
-
+        
         var tokenDescriptor = new SecurityTokenDescriptor {
             Audience = _jwt.Audience,
             Issuer = _jwt.Issuer,

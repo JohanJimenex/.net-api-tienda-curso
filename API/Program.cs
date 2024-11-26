@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using API.Extensions;
 using API.Helpers;
+using API.Helpers.Errors;
 using AspNetCoreRateLimit;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,8 @@ builder.Services.AddDbContext<TiendaContext>(options => {
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<MiExceptionMidleware>(); // Este metodo es para poder usar el middleware de excepciones personalizado
 
 using (var scope = app.Services.CreateScope()) {
 

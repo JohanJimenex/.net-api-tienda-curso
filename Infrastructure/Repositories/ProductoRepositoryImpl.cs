@@ -9,30 +9,21 @@ namespace Infrastructure.Repositories;
 
 public class ProductoRepositoryImpl : BaseRepositoryImpl<Producto>, IProductoRepository {
 
-    private readonly TiendaContext _context;
-
-    public ProductoRepositoryImpl(TiendaContext context) : base(context) {
-        _context = context;
-    }
+    public ProductoRepositoryImpl(TiendaContext context) : base(context) { }
 
     public override async Task<Producto> GetByIdAsync(int id) {
-        try {
-            return await _context.Productos
-                                .Include(p => p.Categoria)
-                                .Include(p => p.Marca)
-                                .FirstOrDefaultAsync(p => p.Id == id) ?? throw new Exception("Producto not found");
-        }
-        catch (Exception ex) {
-            throw new Exception("Error al obtener el producto por Id", ex);
-        }
+        return await _context.Productos
+                            .Include(p => p.Categoria)
+                            .Include(p => p.Marca)
+                            .FirstOrDefaultAsync(p => p.Id == id) ?? null!;
     }
 
-    public override async Task<(int totalItems, IEnumerable<Producto> items)> GetAllAsync(int pageIndex, int pageSize , string search ) {
+    public override async Task<(int totalItems, IEnumerable<Producto> items)> GetAllAsync(int pageIndex, int pageSize, string search) {
 
         var totalItems = await _context.Productos.CountAsync();
-        
+
         var productos = await _context.Productos
-                            .Where(p => p.Nombre!.ToLower().Contains(search.ToLower()))  
+                            .Where(p => p.Nombre!.ToLower().Contains(search.ToLower()))
                             .Include(p => p.Categoria)
                             .Include(p => p.Marca)
                             .Skip(pageIndex * pageSize)

@@ -23,7 +23,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
     private IUsuarioRepository? _usuarios;
     private IRolRepository? _roles;
 
-    public IProductoRepository Productosrepository {
+    public IProductoRepository ProductosRepository {
         get {
             if (_productos == null) {
                 _productos = new ProductoRepositoryImpl(_context);
@@ -87,7 +87,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
 //aunque en este caso las instancias NO se cargan de manera perezosa mientras que en el caso anterior si
 public class UnitOfWork2 : IUnitOfWork {
 
-    public IProductoRepository Productosrepository { get; }
+    public IProductoRepository ProductosRepository { get; }
     public ICategoriaRepository CategoriasRepository { get; }
     public IMarcaRepository MarcasRepository { get; }
 
@@ -104,7 +104,7 @@ public class UnitOfWork2 : IUnitOfWork {
         IRolRepository rolRepository,
         TiendaContext context) {
 
-        Productosrepository = productos;
+        ProductosRepository = productos;
         CategoriasRepository = categorias;
         MarcasRepository = marcas;
         UsuariosRepository = usuarioRepository;

@@ -6,7 +6,7 @@ namespace Core.Interfaces;
 
 public interface IUnitOfWork {
 
-    IProductoRepository Productosrepository { get; }
+    IProductoRepository ProductosRepository { get; }
     ICategoriaRepository CategoriasRepository { get; }
     IMarcaRepository MarcasRepository { get; }
     IUsuarioRepository UsuariosRepository { get; }

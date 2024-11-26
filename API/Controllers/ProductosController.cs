@@ -16,7 +16,7 @@ namespace API.Controllers;
 [ApiVersion("3", Deprecated = true)]
 [Route("api/v{version:apiVersion}/[controller]")]
 // [Route("api/[controller]")]
-// [Authorize(Roles = "Empleado")] //Recuerda que esto funciona porque en el Program.cs se habilito el servicio de app.UseAutorization() y en el JWT se habilito el uso de roles con el ClaimType: "roles"
+[Authorize(Roles = "Empleado")] //Recuerda que esto funciona porque en el Program.cs se habilito el servicio de app.UseAutorization() y en el JWT se habilito el uso de roles con el ClaimType: "roles"
 // [Authorize]
 public class ProductosController : ControllerBase {
 
@@ -53,7 +53,7 @@ public class ProductosController : ControllerBase {
     [HttpGet]
     public async Task<ActionResult<Paginator<ProductoListDTO>>> Get([FromQuery] QueryParams queryParams) {
 
-        var result = await _unitOfWork.Productosrepository.GetAllAsync(queryParams.PageIndex, queryParams.PageSize, queryParams.Search ?? "");
+        var result = await _unitOfWork.ProductosRepository.GetAllAsync(queryParams.PageIndex, queryParams.PageSize, queryParams.Search ?? "");
         var resultDTO = _mapper.Map<List<ProductoListDTO>>(result.items);
 
         var pager = new Paginator<ProductoListDTO>(queryParams.PageIndex, queryParams.PageSize, result.totalItems, resultDTO);
@@ -73,7 +73,7 @@ public class ProductosController : ControllerBase {
     [HttpGet]
     [MapToApiVersion("2")]
     public async Task<ActionResult<List<ProductoListDTO>>> GetV2() {
-        var result = await _unitOfWork.Productosrepository.GetAllAsync();
+        var result = await _unitOfWork.ProductosRepository.GetAllAsync();
         var resultDTO = _mapper.Map<List<ProductoListDTO>>(result);
 
         return Ok(resultDTO.Take(3));
@@ -82,7 +82,7 @@ public class ProductosController : ControllerBase {
     [HttpGet("{id}", Name = "GetById")]
     public async Task<ActionResult<Producto>> GetById(int id) {
         // var producto = _context.Productos.Find(id);
-        var producto = await _unitOfWork.Productosrepository.GetByIdAsync(id);
+        var producto = await _unitOfWork.ProductosRepository.GetByIdAsync(id);
         if (producto == null) {
             return NotFound(new ApiResponse(404));
         }
@@ -109,7 +109,7 @@ public class ProductosController : ControllerBase {
         // };
 
         // _productRepository.Add(producto); //se usa ahora UnitOfWork
-        _unitOfWork.Productosrepository.Add(producto);
+        _unitOfWork.ProductosRepository.Add(producto);
         await _unitOfWork.Save();
         return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
 
@@ -127,7 +127,7 @@ public class ProductosController : ControllerBase {
         //Erores personalizados
         // var yaExisteUnProuctoConEseNombre = await context.Laptops.AnyAsync(x => x.Nombre == laptop.Nombre);
         // var result = await _productRepository.GetAllAsync();
-        var result = await _unitOfWork.Productosrepository.GetAllAsync();
+        var result = await _unitOfWork.ProductosRepository.GetAllAsync();
         var yaExisteUnProuctoConEseNombre = result.Any(x => x.Nombre == productoDto.Nombre);
 
         if (yaExisteUnProuctoConEseNombre) {
@@ -154,7 +154,7 @@ public class ProductosController : ControllerBase {
     [HttpPut("{id}")]
     public async Task<ActionResult<Producto>> Put([FromBody] ProductoDTO productoDTO, int id) {
 
-        var producto = await _unitOfWork.Productosrepository.GetByIdAsync(id);
+        var producto = await _unitOfWork.ProductosRepository.GetByIdAsync(id);
         if (producto == null) {
             return NotFound();
         }
@@ -177,12 +177,12 @@ public class ProductosController : ControllerBase {
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id) {
-        var producto = await _unitOfWork.Productosrepository.GetByIdAsync(id);
+        var producto = await _unitOfWork.ProductosRepository.GetByIdAsync(id);
         if (producto == null) {
             return NotFound();
         }
 
-        _unitOfWork.Productosrepository.Remove(producto);
+        _unitOfWork.ProductosRepository.Remove(producto);
         await _unitOfWork.Save();
         return NoContent();
     }
