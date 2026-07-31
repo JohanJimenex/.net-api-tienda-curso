@@ -10,6 +10,24 @@ public class TiendaContextSeed {
     //Metodo para poblar la base de datos
     public static async Task SeedAsync(TiendaContext tiendaContext, ILoggerFactory loggerFactory) {
         try {
+            // Los roles deben existir antes de registrar usuarios. Esta validación
+            // es idempotente para que también repare una base ya creada sin roles.
+            var rolesIniciales = new[] { "Admin", "Gerente", "Empleado" };
+            var rolesExistentes = tiendaContext.Roles
+                .Where(r => rolesIniciales.Contains(r.Nombre))
+                .Select(r => r.Nombre)
+                .ToList();
+
+            var rolesFaltantes = rolesIniciales
+                .Where(nombre => !rolesExistentes.Contains(nombre))
+                .Select(nombre => new Rol { Nombre = nombre })
+                .ToList();
+
+            if (rolesFaltantes.Count > 0) {
+                tiendaContext.Roles.AddRange(rolesFaltantes);
+                await tiendaContext.SaveChangesAsync();
+            }
+
             //Esto es para obtener la ruta del proyecto
             var ruta = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -51,12 +69,6 @@ public class TiendaContextSeed {
                 }
 
                 tiendaContext.Productos.AddRange(productos);
-                await tiendaContext.SaveChangesAsync();
-            }
-
-            //Agregar roles
-            if (!tiendaContext.Roles.Any()) {
-                tiendaContext.Roles.AddRange(new Rol { Nombre = "Admin" }, new Rol { Nombre = "Gerente" }, new Rol { Nombre = "Empleado" });
                 await tiendaContext.SaveChangesAsync();
             }
 

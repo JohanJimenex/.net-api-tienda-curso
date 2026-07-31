@@ -41,7 +41,14 @@ public class UserService : IUserService {
         var usuario = _mapper.Map<Usuario>(registerDTO);
 
         usuario.Contrasena = _passwordHasher.HashPassword(usuario, registerDTO.Contrasena); //Se encripta la contraseña
-        var rolPredeterminado = _unitOfWork.RolesRepository.Find(r => r.Nombre == Roles.RolPredeterminado.ToString()).First(); //Se busca el rol predeterminado
+        var rolPredeterminado = _unitOfWork.RolesRepository
+            .Find(r => r.Nombre == Roles.RolPredeterminado.ToString())
+            .FirstOrDefault(); //Se busca el rol predeterminado
+
+        if (rolPredeterminado == null)
+        {
+            return "No existe el rol predeterminado configurado";
+        }
 
         try {
 
