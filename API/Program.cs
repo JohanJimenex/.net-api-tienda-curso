@@ -41,7 +41,7 @@ builder.Services.AddAuthenticationYConfigurarJWT(builder.Configuration, builder.
 
 builder.Services.AddDbContext<TiendaContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    options.UseSqlServer(connectionString);
 });
 
 var app = builder.Build();
