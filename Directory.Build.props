@@ -1,0 +1,12 @@
+<!-- Este archivo es para configurar las propiedades del proyecto -->
+
+<!-- A continuacion la conguracion del proyecto -->
+
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
+

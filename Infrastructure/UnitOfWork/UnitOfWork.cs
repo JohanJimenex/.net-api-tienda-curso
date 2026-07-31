@@ -23,6 +23,10 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
     private IUsuarioRepository? _usuarios;
     private IRolRepository? _roles;
 
+    public UnitOfWork(TiendaContext context) {
+        _context = context;
+    }
+
     public IProductoRepository ProductosRepository {
         get {
             if (_productos == null) {
@@ -68,10 +72,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable {
         }
     }
 
-
-    public UnitOfWork(TiendaContext context) {
-        _context = context;
-    }
 
     public async Task<int> Save() {
         return await _context.SaveChangesAsync();
